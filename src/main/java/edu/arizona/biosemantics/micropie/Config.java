@@ -55,8 +55,8 @@ public class Config extends AbstractModule {
 	private int nGramMaxSize = 1;
 	private int nGramMinFrequency = 1;
 	
-	private boolean parallelProcessing = false;
-	private int maxThreads = 1;
+	private boolean parallelProcessing = true;
+	private int maxThreads = 10;
 	
 	private String nGramTokenizerOptions = "-delimiters ' ' -max 1 -min 1";
 	private String stringToWordVectorOptions = "-W " + Integer.MAX_VALUE + " -T -L -M 1 -tokenizer weka.core.tokenizer.NGramTokenizer " + nGramTokenizerOptions + "";
@@ -191,7 +191,7 @@ public class Config extends AbstractModule {
 		bind(GcExtractor.class).in(Singleton.class);
 		bind(GrowthPhExtractor.class).in(Singleton.class);
 		bind(CellSizeExtractor.class).in(Singleton.class);
-		bind(CellShapeExtractor.class).in(Singleton.class);
+		//bind(CellShapeExtractor.class).in(Singleton.class);
 		
 		weka.core.logging.Logger.log(weka.core.logging.Logger.Level.INFO, "Weka Logging started"); 
 	}
