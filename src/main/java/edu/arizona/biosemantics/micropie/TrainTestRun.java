@@ -195,6 +195,8 @@ public class TrainTestRun implements IRun {
 		//http://stackoverflow.com/questions/12305667/how-is-exception-handling-done-in-a-callable
 		//http://nlp.stanford.edu/downloads/parser-faq.shtml#n
 		//http://nlp.stanford.edu/downloads/parser-faq.shtml#k
+		//-> sort sentences according to length buckets and use number of threads according to 
+		//approx memory usage for the buckets, e.g. can do 4 of max length 20 at once if ~1024M Heap.
 		//http://nlp.stanford.edu/downloads/corenlp-faq.shtml#memory
 		//http://nlp.stanford.edu/nlp/javadoc/javanlp/edu/stanford/nlp/parser/lexparser/LexicalizedParser.html
 		
@@ -202,10 +204,20 @@ public class TrainTestRun implements IRun {
 		List<List<ListenableFuture<List<String>>>> subsentenceSplitsPerFile = new LinkedList<List<ListenableFuture<List<String>>>>();
 		//final CountDownLatch compoundSentenceSplitLatch = new CountDownLatch(numberOfSentences);
 		//final CountDownLatch compoundSentenceSplitLatchDummy = new CountDownLatch(numberOfSentences);
+		//int overall = 0;
+		//int maxSize = 0;
 		for(int i=0; i<textFiles.size(); i++) {
 			List<String> sentences = sentenceSplits.get(i).get();
 			List<ListenableFuture<List<String>>> subsentenceSplits = new LinkedList<ListenableFuture<List<String>>>();
 			for(String sentence : sentences) {
+				/*String[] tokens = sentence.split("\\s+");
+				System.out.println("length " + tokens.length);
+				int size = tokens.length;
+				overall += size;
+				if(size > maxSize) {
+					maxSize = size;
+				}*/
+				
 				CompoundSentenceSplitRun splitRun = new CompoundSentenceSplitRun(sentence, lexicalizedParser, 
 						PTBTokenizer.factory(new CoreLabelTokenFactory(), ""));
 				ListenableFuture<List<String>> futureResult = executorService.submit(splitRun);
@@ -221,6 +233,9 @@ public class TrainTestRun implements IRun {
 			}
 			subsentenceSplitsPerFile.add(subsentenceSplits);
 		}
+		//double avgLength = (double)overall / numberOfSentences;
+		//System.out.println("avg: " + avgLength);
+		//System.out.println("maxSize: " + maxSize);
 		
 		for(List<ListenableFuture<List<String>>> fileFutures : subsentenceSplitsPerFile) {
 			for(ListenableFuture<List<String>> future : fileFutures) {
@@ -240,7 +255,7 @@ public class TrainTestRun implements IRun {
 			log(LogLevel.ERROR, "Problem with latch", e);
 		}*/
 		
-		
+		//non-threaded
 		/*int numberOfSentences = getNumberOfSentences(sentenceSplits);
 		List<List<List<String>>> subsentenceSplitsPerFile = new LinkedList<List<List<String>>>();
 		for(int i=0; i<textFiles.size(); i++) {
@@ -283,7 +298,7 @@ public class TrainTestRun implements IRun {
 		}
 		
 		log(LogLevel.INFO, "Done reading test sentences...");
-		return result;
+		return null;
 	}
 	
 	private int getNumberOfSentences(List<ListenableFuture<List<String>>> sentenceSplitsList) throws InterruptedException, ExecutionException {
