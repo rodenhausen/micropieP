@@ -56,7 +56,7 @@ public class Config extends AbstractModule {
 	private int nGramMinFrequency = 1;
 	
 	private boolean parallelProcessing = true;
-	private int maxThreads = 10;
+	private int maxThreads = 2;
 	
 	private String nGramTokenizerOptions = "-delimiters ' ' -max 1 -min 1";
 	private String stringToWordVectorOptions = "-W " + Integer.MAX_VALUE + " -T -L -M 1 -tokenizer weka.core.tokenizer.NGramTokenizer " + nGramTokenizerOptions + "";

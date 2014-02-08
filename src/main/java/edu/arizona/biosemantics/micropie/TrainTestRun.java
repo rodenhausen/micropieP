@@ -217,19 +217,21 @@ public class TrainTestRun implements IRun {
 				if(size > maxSize) {
 					maxSize = size;
 				}*/
+				if(sentence.length() <= 50) {
 				
-				CompoundSentenceSplitRun splitRun = new CompoundSentenceSplitRun(sentence, lexicalizedParser, 
-						PTBTokenizer.factory(new CoreLabelTokenFactory(), ""));
-				ListenableFuture<List<String>> futureResult = executorService.submit(splitRun);
-				/*futureResult.addListener(new Runnable() {
-					@Override
-					public void run() {
-						System.out.println("done");
-				//		compoundSentenceSplitLatch.countDown();
-				//		System.out.println(compoundSentenceSplitLatch.getCount());
-					}
-				}, this.executorService);*/
-				subsentenceSplits.add(futureResult);
+					CompoundSentenceSplitRun splitRun = new CompoundSentenceSplitRun(sentence, lexicalizedParser, 
+							PTBTokenizer.factory(new CoreLabelTokenFactory(), ""));
+					ListenableFuture<List<String>> futureResult = executorService.submit(splitRun);
+					/*futureResult.addListener(new Runnable() {
+						@Override
+						public void run() {
+							System.out.println("done");
+					//		compoundSentenceSplitLatch.countDown();
+					//		System.out.println(compoundSentenceSplitLatch.getCount());
+						}
+					}, this.executorService);*/
+					subsentenceSplits.add(futureResult);
+				}
 			}
 			subsentenceSplitsPerFile.add(subsentenceSplits);
 		}
@@ -274,12 +276,11 @@ public class TrainTestRun implements IRun {
 			}
 			subsentenceSplitsPerFile.add(subsentenceSplits);
 		}*/
-		
 		List<Sentence> result = new LinkedList<Sentence>();
 		for(int i=0; i<textFiles.size(); i++) {
-			List<String> sentences = sentenceSplits.get(i).get();
-			for(int j=0; j<sentences.size(); j++) {
-				List<String> subsentences = subsentenceSplitsPerFile.get(i).get(j).get();//.get();
+			List<ListenableFuture<List<String>>> fileFuture = subsentenceSplitsPerFile.get(i);
+			for(int j=0; j<fileFuture.size(); j++) {
+				List<String> subsentences = fileFuture.get(j).get();//.get();
 				for(String subsentence : subsentences) {
 					Sentence sentence = new Sentence(subsentence);
 					result.add(sentence);
@@ -298,7 +299,7 @@ public class TrainTestRun implements IRun {
 		}
 		
 		log(LogLevel.INFO, "Done reading test sentences...");
-		return null;
+		return result;
 	}
 	
 	private int getNumberOfSentences(List<ListenableFuture<List<String>>> sentenceSplitsList) throws InterruptedException, ExecutionException {
