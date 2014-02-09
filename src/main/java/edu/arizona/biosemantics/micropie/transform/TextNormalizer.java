@@ -19,7 +19,7 @@ public class TextNormalizer implements ITextNormalizer {
 	}
 
 	@Override
-	public String transform(String text) {
+	public String normalize(String text) {
 		boolean isTokenMatch = false;
 		StringTokenizer textToken = new StringTokenizer(text, " ");
 

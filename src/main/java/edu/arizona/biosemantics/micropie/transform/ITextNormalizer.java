@@ -10,6 +10,6 @@ public interface ITextNormalizer {
 	 * @param text
 	 * @return transformed text
 	 */
-	public String transform(String text);
+	public String normalize(String text);
 	
 }

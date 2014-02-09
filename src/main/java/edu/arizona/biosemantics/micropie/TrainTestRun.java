@@ -21,6 +21,7 @@ import com.google.inject.name.Named;
 
 import edu.arizona.biosemantics.micropie.classify.ILabel;
 import edu.arizona.biosemantics.micropie.classify.MultiSVMClassifier;
+import edu.arizona.biosemantics.micropie.extract.TaxonCharacterMatrixCreator;
 import edu.arizona.biosemantics.micropie.io.CSVClassifiedSentenceWriter;
 import edu.arizona.biosemantics.micropie.io.CSVSentenceReader;
 import edu.arizona.biosemantics.micropie.io.CSVTaxonCharacterMatrixWriter;
@@ -34,7 +35,6 @@ import edu.arizona.biosemantics.micropie.model.TaxonTextFile;
 import edu.arizona.biosemantics.micropie.transform.CompoundSentenceSplitRun;
 import edu.arizona.biosemantics.micropie.transform.ITextNormalizer;
 import edu.arizona.biosemantics.micropie.transform.SentenceSplitRun;
-import edu.arizona.biosemantics.micropie.transform.TaxonCharacterMatrixCreator;
 import edu.stanford.nlp.ling.CoreLabel;
 import edu.stanford.nlp.parser.lexparser.LexicalizedParser;
 import edu.stanford.nlp.pipeline.StanfordCoreNLP;

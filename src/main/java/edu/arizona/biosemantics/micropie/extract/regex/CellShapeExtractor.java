@@ -1,4 +1,4 @@
-package edu.arizona.biosemantics.micropie.transform.regex;
+package edu.arizona.biosemantics.micropie.extract.regex;
 
 import java.io.BufferedReader;
 import java.io.FileInputStream;
@@ -14,14 +14,24 @@ import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import com.google.inject.name.Named;
+
+import edu.arizona.biosemantics.micropie.classify.ILabel;
 import au.com.bytecode.opencsv.CSVReader;
 
-public class CellShapeExtractor implements IContentExtractor {
+public class CellShapeExtractor extends AbstractCharacterValueExtractor {
 
-	private String character = "Cell shape";
+	public CellShapeExtractor(@Named("CellShapeExtractor_Label")ILabel label) {
+		super(label, "Cell shape");
+	}
 	
+	public CellShapeExtractor(@Named("CellShapeExtractor_Label")ILabel label, 
+			@Named("CellShapeExtractor_Character")String character) {
+		super(label, character);
+	}
+
 	@Override
-	public Set<String> getContent(String text) {
+	public Set<String> getCharacterValue(String text) {
 		// TODO Auto-generated constructor stub
 		Set<String> output = new HashSet<String>(); // Output,
 		// format::List<String>
@@ -68,10 +78,4 @@ public class CellShapeExtractor implements IContentExtractor {
 
 		return output;
 	}
-
-	@Override
-	public String getCharacter() {
-		return character;
-	}
-
 }

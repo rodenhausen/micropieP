@@ -33,7 +33,7 @@ public class SentenceSplitRun implements Callable<List<String>> {
 	@Override
 	public List<String> call() throws Exception {
 		log(LogLevel.INFO, "Normalize text... : " + text);
-		text = normalizer.transform(text);
+		text = normalizer.normalize(text);
 		log(LogLevel.INFO, "Done normalizing, resulting text: " + text);
 		
 		log(LogLevel.INFO, "Splitting text into sentences");
